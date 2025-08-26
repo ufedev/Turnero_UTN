@@ -6,7 +6,7 @@ import Input from "./components/Input"
 const App = () => {
   // primero estados
   const [nombreCompleto, modificarNombreCompleto] = useState("")
-
+  const [horario, modificarHorario] = useState("")
 
   return (
     <div
@@ -27,6 +27,17 @@ const App = () => {
                   modificarNombreCompleto(evento.target.value)
 
                 }
+              }
+            />
+
+            <Input
+              name="Horario"
+              type="datetime-local"
+              value={horario}
+              onChange={(evento) => {
+                console.log(horario)
+                modificarHorario(evento.target.value)
+              }
               }
             />
 
