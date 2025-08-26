@@ -8,9 +8,9 @@
 const Contenedor = ({ className, children }) => {
     return (
         <div
-            className={`
-            flex-1 
-            min-h-[400px] 
+            className={` 
+            w-[400px]
+            h-[500px] 
             rounded-lg
             p-[16px] 
             ${className}`}
