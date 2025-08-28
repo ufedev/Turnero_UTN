@@ -10,9 +10,10 @@ const Contenedor = ({ className, children }) => {
         <div
             className={` 
             w-[400px]
-            h-[500px] 
+            h-[520px]
             rounded-lg
-            p-[16px] 
+            p-[16px]
+            shadow 
             ${className}`}
         >
             {children}

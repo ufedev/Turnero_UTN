@@ -8,7 +8,7 @@ const Input =
 
                 <input
 
-                    className='p-1 border-[1px] border-slate-400 rounded shadow'
+                    className='p-1 border-[1px] border-slate-400 rounded shadow bg-slate-200'
                     name={name}
                     id={name}
                     type={type}
@@ -18,6 +18,7 @@ const Input =
                     min={min}
                     max={max}
                     step={step}
+
                 />
             </div>
         )
