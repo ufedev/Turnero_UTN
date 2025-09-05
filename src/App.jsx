@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Input from "./components/Input"
 import { ToastContainer, toast } from "react-toastify"
 import { leerDB, escribirDB } from './ayuda.js'
+import Tarjeta from "./components/Tarjeta.jsx"
 
 const App = () => {
   // primero estados
@@ -12,7 +13,7 @@ const App = () => {
   const [fecha, modificarFecha] = useState("")
   const [horario, modificarHorario] = useState("")
   const [telefono, modificarTelefono] = useState("")
-  const [citas, modificarCitas] = useState([])
+  const [citas, modificarCitas] = useState(leerDB() ?? [])
   const hoy = new Date()
   const unaSemanaDespues = new Date()
   unaSemanaDespues.setDate(unaSemanaDespues.getDate() + 7)
@@ -80,15 +81,12 @@ const App = () => {
     escribirDB(datos)
     modificarCitas(leerDB() ?? [])
 
-    console.log(datos)
-
-
-
   }
 
   return (
     <div
       className="w-full min-h-screen bg-gradient-to-b from-amber-300 to-amber-600 flex justify-center items-center gap-3 px-4 ">
+      {/* /** Contenedor 1 */}
       <Contenedor className="bg-slate-300/75" >
         <div>
           <h2 className='text-3xl font-black text-center mt-5' >Formulario</h2>
@@ -152,9 +150,18 @@ const App = () => {
           </form>
         </div>
       </Contenedor>
+
+      {/* /** Contenedor 2 */}
       <Contenedor className="bg-slate-300/75">
         <div>
-          <h2>Turnos</h2>
+          <h2 className='text-2xl font-black text-center'>Turnos</h2>
+          <div className="h-[450px] overflow-auto">
+            {
+              citas.map(cita => {
+                return <Tarjeta cita={cita} />
+              })
+            }
+          </div>
         </div>
       </Contenedor>
       <ToastContainer />
