@@ -3,6 +3,7 @@ import Contenedor from "./components/Contenedor"
 import { useState } from 'react'
 import Input from "./components/Input"
 import { ToastContainer, toast } from "react-toastify"
+import { leerDB, escribirDB } from './ayuda.js'
 
 const App = () => {
   // primero estados
@@ -11,18 +12,77 @@ const App = () => {
   const [fecha, modificarFecha] = useState("")
   const [horario, modificarHorario] = useState("")
   const [telefono, modificarTelefono] = useState("")
-
+  const [citas, modificarCitas] = useState([])
   const hoy = new Date()
   const unaSemanaDespues = new Date()
   unaSemanaDespues.setDate(unaSemanaDespues.getDate() + 7)
 
 
+  const manejarHorario = (evento) => {
+    const horaUsuario = evento.target.value
+    const horaUsuarioSplit = horaUsuario.split(":")
+    const hora = Number(horaUsuarioSplit[0])
+    const minutos = Number(horaUsuarioSplit[1])
+    if (hora >= 8 && hora <= 19) {
+      if (minutos === 30 || minutos === 0) {
+        modificarHorario(horaUsuario)
+        return
+      }
+      if (minutos > 15 && minutos < 45) {
+        modificarHorario(`${horaUsuarioSplit[0]}:30`)
+
+      } else if (minutos >= 45) {
+        let hora_formateada = hora + 1
+
+        if (hora_formateada >= 20) {
+          toast.error("Fuera de horario")
+          return
+        }
+
+        hora_formateada = hora_formateada.toString()
+        if (hora_formateada.length === 1) {
+          modificarHorario(`0${hora_formateada}:00`)
+        } else {
+          modificarHorario(`${hora_formateada}:00`)
+        }
+
+      }
+      else {
+        modificarHorario(`${horaUsuarioSplit[0]}:00`)
+
+      }
+
+    } else {
+      toast.error("Fuera de horario")
+    }
+    // console.log(evento)
+  }
+
   const enviarFormulario = (evento) => {
     evento.preventDefault()
-    const horarioDate = new Date(horario)
-    if (horarioDate.getDay() === 0) {
-      console.log("Es domingo")
+
+    if ([nombreCompleto, fecha, horario, telefono].includes("")) {
+      toast.error("Todos los campos son obligatorios")
+      return
     }
+    // Construir el turno
+    const turno = {
+      nombreCompleto, // nombreCompleto:nombreCompleto
+      fecha,
+      horario,
+      telefono
+    }
+    // Leemos el localStorage
+    const datos = leerDB() ?? []
+    // Agregamos el objeto al final del arreglo
+    datos.push(turno)
+    // Guardamos en localStorage
+    escribirDB(datos)
+    modificarCitas(leerDB() ?? [])
+
+    console.log(datos)
+
+
 
   }
 
@@ -33,7 +93,7 @@ const App = () => {
         <div>
           <h2 className='text-3xl font-black text-center mt-5' >Formulario</h2>
           <form
-            className="flex flex-col gap-5 pt-5"
+            className="flex flex-col gap-5 mt-5"
             onSubmit={enviarFormulario}
 
           >
@@ -70,14 +130,8 @@ const App = () => {
               name="Horario"
               type="time"
               step="1800"
-
               value={horario}
-              onChange={(evento) => {
-                const horaUsuario = evento.target.value
-                const [hora, minutos] = horaUsuario.split(":")
-                console.log(Number(hora), Number(minutos))
-                modificarHorario(evento.target.value)
-              }}
+              onChange={manejarHorario}
 
             />
             <Input
@@ -91,7 +145,7 @@ const App = () => {
 
             />
             <input
-              className="w-full p-2 text-center font-bold bg-slate-950 text-slate-100 rounded mt-5 cursor-pointer hover:bg-slate-500 transition-all"
+              className="w-full p-2 text-center font-bold bg-slate-950 text-slate-100 rounded mt-5 cursor-pointer hover:bg-slate-500 transition-all hover:scale-110"
               type="submit"
               value="Agendar"
             />
