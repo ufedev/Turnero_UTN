@@ -143,7 +143,7 @@ const App = () => {
 
             />
             <input
-              className="w-full p-2 text-center font-bold bg-slate-950 text-slate-100 rounded mt-5 cursor-pointer hover:bg-slate-500 transition-all hover:scale-110"
+              className="w-full p-2 text-center font-bold bg-slate-950 text-slate-100 rounded mt-5 cursor-pointer hover:bg-slate-500 transition-all"
               type="submit"
               value="Agendar"
             />
@@ -155,7 +155,7 @@ const App = () => {
       <Contenedor className="bg-slate-300/75">
         <div>
           <h2 className='text-2xl font-black text-center'>Turnos</h2>
-          <div className="h-[450px] overflow-auto">
+          <div className="h-[450px] overflow-auto flex flex-col gap-1 p-2">
             {
               citas.map(cita => {
                 return <Tarjeta cita={cita} />
