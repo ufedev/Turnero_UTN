@@ -5,10 +5,10 @@ import Input from "./components/Input"
 import { ToastContainer, toast } from "react-toastify"
 import { leerDB, escribirDB } from './ayuda.js'
 import Tarjeta from "./components/Tarjeta.jsx"
-
+import { v4 as uuid } from "uuid"
 const App = () => {
   // primero estados
-  let contador = 1
+  const [id, modificarId] = useState("")
   const [nombreCompleto, modificarNombreCompleto] = useState("")
   const [fecha, modificarFecha] = useState("")
   const [horario, modificarHorario] = useState("")
@@ -60,11 +60,13 @@ const App = () => {
   }
 
   const borrarCita = () => {
+    alert("borrando cita")
 
   }
 
   const editarCita = () => {
-
+    const ok = confirm("editando Cita")
+    console.log(ok)
   }
   // Funcion para enviar el formulario
   const enviarFormulario = (evento) => {
@@ -74,8 +76,10 @@ const App = () => {
       toast.error("Todos los campos son obligatorios")
       return
     }
+
     // Construir el turno
     const turno = {
+      id: uuid(),
       nombreCompleto, // nombreCompleto:nombreCompleto
       fecha,
       horario,
