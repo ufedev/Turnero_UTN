@@ -6,9 +6,12 @@ import { ToastContainer, toast } from "react-toastify"
 import { leerDB, escribirDB } from './ayuda.js'
 import Tarjeta from "./components/Tarjeta.jsx"
 import { v4 as uuid } from "uuid"
+
 const App = () => {
   // primero estados
-  const [id, modificarId] = useState("")
+
+
+  const [id, modificarId] = useState(null)
   const [nombreCompleto, modificarNombreCompleto] = useState("")
   const [fecha, modificarFecha] = useState("")
   const [horario, modificarHorario] = useState("")
@@ -64,13 +67,70 @@ const App = () => {
 
   }
 
-  const editarCita = () => {
-    const ok = confirm("editando Cita")
-    console.log(ok)
+  const editarCita = (id) => {
+
+    const [citaFiltrada] = citas.filter(
+      function (cita) {
+        if (cita.id === id) {
+          return cita
+        }
+
+      }
+    )
+
+    modificarId(citaFiltrada.id)
+    modificarNombreCompleto(citaFiltrada.nombreCompleto)
+    modificarFecha(citaFiltrada.fecha)
+    modificarHorario(citaFiltrada.horario)
+    modificarTelefono(citaFiltrada.telefono)
+
+  }
+  // 
+  const limpiarEstados = () => {
+    modificarId(null)
+    modificarNombreCompleto("")
+    modificarHorario("")
+    modificarFecha("")
+    modificarTelefono("")
+  }
+  // Modifica la cita cargada para editar
+  const modificarCitayGuarda = () => {
+
+    // Mapeamos las el estado de citas
+    // y modificamos unicamente la que 
+    // coincida con el id que tenemos
+    // guardado en el estado id
+    const citasModificadas = citas.map(
+      function (cita) {
+        if (cita.id === id) {
+          return {
+            id: id,
+            nombreCompleto,
+            horario,
+            fecha,
+            telefono
+          }
+        }
+        return cita
+      }
+    )
+    // Escribimos el localStorage
+    escribirDB(citasModificadas)
+    // Leemos el localStorage y modificamos el 
+    // estado de citas
+    modificarCitas(leerDB())
+    // Reseteamos el formulario
+    limpiarEstados()
+    // Mostramos mensajito
+    toast.success("Turno Modificado Enhorabuena")
   }
   // Funcion para enviar el formulario
   const enviarFormulario = (evento) => {
     evento.preventDefault()
+    if (id !== null) {
+      modificarCitayGuarda()
+      return
+    }
 
     if ([nombreCompleto, fecha, horario, telefono].includes("")) {
       toast.error("Todos los campos son obligatorios")
@@ -99,8 +159,7 @@ const App = () => {
     // Actualizamos el estado de citas
     modificarCitas(leerDB() ?? [])
     // Reseteamos formulario
-    modificarNombreCompleto("")
-
+    limpiarEstados()
     // Agregamos TOAST de completado exitoso
 
     toast.success("Turno Cargado Enhorabuena")
@@ -170,7 +229,7 @@ const App = () => {
             <input
               className="w-full p-2 text-center font-bold bg-slate-950 text-slate-100 rounded mt-5 cursor-pointer hover:bg-slate-500 transition-all"
               type="submit"
-              value="Agendar"
+              value={id !== null ? "Modificar" : "Agendar"}
             />
           </form>
         </div>
@@ -183,9 +242,8 @@ const App = () => {
           <div className="h-[450px] overflow-auto flex flex-col gap-1 p-2">
             {
               citas.map(cita => {
-                const key_unica = (Date.now() + Math.random()).toString(32)
                 return <Tarjeta
-                  key={key_unica}
+                  key={cita.id}
                   cita={cita}
                   borrar={borrarCita}
                   modificar={editarCita} />

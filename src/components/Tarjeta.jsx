@@ -11,13 +11,13 @@ const Tarjeta = ({ cita, modificar, borrar }) => {
       </div>
       <div className="flex flex-col items-end justify-center gap-1">
         <button
-          onClick={() => modificar()}
+          onClick={() => modificar(cita.id)}
           className='p-0.5 rounded hover:bg-blue-200 cursor-pointer text-black/75'
           title="Editar">
           <Edit />
         </button>
         <button
-          onClick={() => { }}
+          onClick={() => {}}
           className='p-0.5 rounded hover:bg-red-200 cursor-pointer text-black/75'
           title="Borrar">
           <Delete />
