@@ -9,8 +9,7 @@ export function escribirDB (datos) {
 }
 
 export function formatearFecha (fecha, hora) {
-    console.log(fecha)
-    console.log(hora)
+
     const dt = new Date(`${fecha}T${hora}`)
 
     return dt.toLocaleDateString("es-ES", {

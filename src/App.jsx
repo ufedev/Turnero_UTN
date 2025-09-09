@@ -8,7 +8,7 @@ import Tarjeta from "./components/Tarjeta.jsx"
 
 const App = () => {
   // primero estados
-
+  let contador = 1
   const [nombreCompleto, modificarNombreCompleto] = useState("")
   const [fecha, modificarFecha] = useState("")
   const [horario, modificarHorario] = useState("")
@@ -73,13 +73,26 @@ const App = () => {
       horario,
       telefono
     }
+
     // Leemos el localStorage
     const datos = leerDB() ?? []
+    // Verificar que no exista esta fecha
+
+
+
     // Agregamos el objeto al final del arreglo
     datos.push(turno)
     // Guardamos en localStorage
     escribirDB(datos)
+    // Actualizamos el estado de citas
     modificarCitas(leerDB() ?? [])
+    // Reseteamos formulario
+    modificarNombreCompleto("")
+
+    // Agregamos TOAST de completado exitoso
+
+    toast.success("Turno Cargado Enhorabuena")
+
 
   }
 
@@ -158,12 +171,14 @@ const App = () => {
           <div className="h-[450px] overflow-auto flex flex-col gap-1 p-2">
             {
               citas.map(cita => {
-                return <Tarjeta cita={cita} />
+                const key_unica = (Date.now() + Math.random()).toString(32)
+                return <Tarjeta key={key_unica} cita={cita} />
               })
             }
           </div>
         </div>
       </Contenedor>
+
       <ToastContainer />
     </div >
   )
