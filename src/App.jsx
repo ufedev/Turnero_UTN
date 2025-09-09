@@ -59,6 +59,14 @@ const App = () => {
     // console.log(evento)
   }
 
+  const borrarCita = () => {
+
+  }
+
+  const editarCita = () => {
+
+  }
+  // Funcion para enviar el formulario
   const enviarFormulario = (evento) => {
     evento.preventDefault()
 
@@ -172,7 +180,11 @@ const App = () => {
             {
               citas.map(cita => {
                 const key_unica = (Date.now() + Math.random()).toString(32)
-                return <Tarjeta key={key_unica} cita={cita} />
+                return <Tarjeta
+                  key={key_unica}
+                  cita={cita}
+                  borrar={borrarCita}
+                  modificar={editarCita} />
               })
             }
           </div>
