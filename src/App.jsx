@@ -3,7 +3,7 @@ import Contenedor from "./components/Contenedor"
 import { useState } from 'react'
 import Input from "./components/Input"
 import { ToastContainer, toast } from "react-toastify"
-import { leerDB, escribirDB } from './ayuda.js'
+import { leerDB, escribirDB, formatearFecha } from './ayuda.js'
 import Tarjeta from "./components/Tarjeta.jsx"
 import { v4 as uuid } from "uuid"
 
@@ -62,9 +62,20 @@ const App = () => {
     // console.log(evento)
   }
 
-  const borrarCita = () => {
-    alert("borrando cita")
+  const borrarCita = (cita) => {
+    const ok = confirm(`Desea eliminar la cita de ${formatearFecha(cita.fecha, cita.horario)}`)
 
+    if (ok) {
+
+      const citasNoEliminas = citas.filter((c) => {
+        if (c.id !== cita.id) return cita
+      })
+      escribirDB(citasNoEliminas)
+      modificarCitas(leerDB())
+      toast.info("se ha eliminado una cita")
+      return
+    }
+    toast.info("Se cancelo la eliminación")
   }
 
   const editarCita = (id) => {
@@ -127,6 +138,17 @@ const App = () => {
   // Funcion para enviar el formulario
   const enviarFormulario = (evento) => {
     evento.preventDefault()
+    // Verificamos que ese horario no exista
+    const existe = citas.some(
+      function (cita) {
+        return cita.horario === horario && cita.fecha === fecha
+      }
+    )
+    if (existe) {
+      toast.info("Ya hay citas en ese horario")
+      return
+    }
+
     if (id !== null) {
       modificarCitayGuarda()
       return
@@ -247,7 +269,19 @@ const App = () => {
                   cita={cita}
                   borrar={borrarCita}
                   modificar={editarCita} />
+
               })
+
+              /**
+               * propiedades pasadas a la tarjeta, forma como toma el componente
+               * 
+               * props={
+               *        key:cita.id,
+               *        cita:cita
+               *        borrar:borrarCita,
+               *        modificar:editarCita
+               *        }
+               */
             }
           </div>
         </div>

@@ -17,7 +17,7 @@ const Tarjeta = ({ cita, modificar, borrar }) => {
           <Edit />
         </button>
         <button
-          onClick={() => {}}
+          onClick={() => { borrar(cita) }}
           className='p-0.5 rounded hover:bg-red-200 cursor-pointer text-black/75'
           title="Borrar">
           <Delete />
